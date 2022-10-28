@@ -1226,3 +1226,18 @@
 1526093415 c:\mingw64\x86_64-w64-mingw32\include\imm.h
 	<_mingw_unicode.h>
 
+1666992042 source:c:\personal_bs\pingpong\allegrobase.cpp
+	"AllegroBase.hpp"
+	<iostream>
+
+1666992042 c:\personal_bs\pingpong\allegrobase.hpp
+	<allegro5/allegro.h>
+	<allegro5/allegro_primitives.h>
+
+1666992042 source:c:\personal_bs\pingpong\main.cpp
+	<iostream>
+	"AllegroBase.hpp"
+	<windows.h>
+	<cstdlib>
+	<cstdio>
+
