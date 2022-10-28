@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 //вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до
-using namespace std;
+/*using namespace std;
 
 const int FPS = 60;
 const int SCREEN_W = 1280;
@@ -120,7 +120,7 @@ private:
         }
     }
 };
-
+*/
 
 
 class Circle : public Figure
