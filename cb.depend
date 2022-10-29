@@ -1234,7 +1234,7 @@
 	<allegro5/allegro.h>
 	<allegro5/allegro_primitives.h>
 
-1666992042 source:c:\personal_bs\pingpong\main.cpp
+1667035895 source:c:\personal_bs\pingpong\main.cpp
 	<iostream>
 	"AllegroBase.hpp"
 	<windows.h>

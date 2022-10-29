@@ -50,7 +50,6 @@ public:
     virtual void Reset(){
         x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
         y_=rand()%600 +40;
-        al_draw_filled_rectangle( x_, y_ , x_+a_, y_-a_, al_map_rgb( 255, 255, 255 ) );
     };
 };
 
@@ -156,7 +155,6 @@ public:
         dx_ = (rand() % 10) - 5;
         if( dx_ == 0){ dx_ = 1; }
         dy_ = 5.0;
-        al_draw_filled_circle( x_, y_, 10, al_map_rgb( 255, 255, 255 ) );
     }
 };
 
