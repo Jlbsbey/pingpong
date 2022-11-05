@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 //вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до
 using namespace std;
 
@@ -59,7 +60,8 @@ const int MAX = 6;
 class ScreenSaver
 {
 private:
-    PFigure figures[MAX];
+    //PFigure figures[MAX];
+    vector< PFigure > figures;
     int size_;
 public:
     static ScreenSaver &Instance()
@@ -81,7 +83,7 @@ public:
     {
         for( int i = 0; i < size_; ++i )
         {
-            figures[i]->Move();
+           figures[i]->Move();
         }
     }
 
@@ -91,7 +93,8 @@ public:
         {
             return;
         }
-        figures[ size_ ] = f;
+        //figures[ size_ ] = f; //vector push back
+        figures.push_back(f);
         ++size_;
     }
 
@@ -99,7 +102,7 @@ public:
     {
         for( int i = 0; i < size_; ++i )
         {
-            figures[i]->Reset();
+           figures[i]->Reset();
         }
     }
 
@@ -107,7 +110,7 @@ private:
     ScreenSaver() :
         size_( 0 )
     {
-        memset( figures, 0, sizeof( figures ) );
+        //memset( figures, 0, sizeof( figures ) );
     }
 
     ~ScreenSaver()
@@ -115,7 +118,7 @@ private:
         for( int i = 0; i < size_; ++i )
         {
             delete figures[i];
-            figures[i] = 0;
+            /*figures[i] = 0;*/
         }
     }
 };
@@ -221,7 +224,7 @@ public:
         }
     };
     virtual void Reset(){
-        y_ = SCREEN_H/2; 
+        y_ = SCREEN_H/2;
     }
 };
 
