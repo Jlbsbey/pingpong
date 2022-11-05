@@ -93,7 +93,6 @@ public:
         {
             return;
         }
-        //figures[ size_ ] = f; //vector push back
         figures.push_back(f);
         ++size_;
     }
@@ -109,16 +108,13 @@ public:
 private:
     ScreenSaver() :
         size_( 0 )
-    {
-        //memset( figures, 0, sizeof( figures ) );
-    }
+    {}
 
     ~ScreenSaver()
     {
         for( int i = 0; i < size_; ++i )
         {
             delete figures[i];
-            /*figures[i] = 0;*/
         }
     }
 };
