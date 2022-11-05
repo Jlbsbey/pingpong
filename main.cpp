@@ -10,7 +10,7 @@ using namespace std;
 const int FPS = 60;
 const int SCREEN_W = 1280;
 const int SCREEN_H = 720;
-
+int p1=0, p2=0;
 class Figure
 {
 protected:
@@ -73,6 +73,8 @@ public:
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
+        const string text  =(char*) p1 + ' : ' + (char*) p2;
+        al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, 10, ALLEGRO_ALIGN_CENTRE, "Pong" );
         for( int i = 0; i < size_; ++i )
         {
             figures[i]->Draw();
@@ -137,11 +139,15 @@ public:
     {
         x_ += dx_;
         y_ += dy_;
-        if ( ( x_ < 1.0 ) ||
-             ( x_ > SCREEN_W ))
+        if ( ( x_ < 1.0 ))
         {
+            p2++;
             ScreenSaver::Instance().Reset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
-        }else if ( ( y_ < 1.0 ) ||
+        }else if(( x_ > SCREEN_W )){
+            p1++;
+            ScreenSaver::Instance().Reset();
+        }
+        if ( ( y_ < 1.0 ) ||
             ( y_ > SCREEN_H ))
         {
             dy_= -dy_;
