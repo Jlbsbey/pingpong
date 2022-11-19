@@ -56,71 +56,7 @@ public:
 
 typedef Figure * PFigure;
 const int MAX = 6;
-
-class ScreenSaver
-{
-private:
-    //PFigure figures[MAX];
-    vector< PFigure > figures;
-    int size_;
-public:
-    static ScreenSaver &Instance()
-    {
-        static ScreenSaver instance;
-        return instance;
-    }
-
-    void Draw()
-    {
-        al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        const string text  =(char*) p1 + ' : ' + (char*) p2;
-        al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, 10, ALLEGRO_ALIGN_CENTRE, "Pong" );
-        for( int i = 0; i < size_; ++i )
-        {
-            figures[i]->Draw();
-        }
-    }
-
-    void Next()
-    {
-        for( int i = 0; i < size_; ++i )
-        {
-           figures[i]->Move();
-        }
-    }
-
-    void Add( Figure *f )
-    {
-        if ( size_ >= MAX )
-        {
-            return;
-        }
-        figures.push_back(f);
-        ++size_;
-    }
-
-    void Reset()
-    {
-        for( int i = 0; i < size_; ++i )
-        {
-           figures[i]->Reset();
-        }
-    }
-
-private:
-    ScreenSaver() :
-        size_( 0 )
-    {}
-
-    ~ScreenSaver()
-    {
-        for( int i = 0; i < size_; ++i )
-        {
-            delete figures[i];
-        }
-    }
-};
-
+void tmpReset();
 
 class Circle : public Figure
 {
@@ -142,10 +78,10 @@ public:
         if ( ( x_ < 1.0 ))
         {
             p2++;
-            ScreenSaver::Instance().Reset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
+            tmpReset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
         }else if(( x_ > SCREEN_W )){
             p1++;
-            ScreenSaver::Instance().Reset();
+            tmpReset();
         }
         if ( ( y_ < 1.0 ) ||
             ( y_ > SCREEN_H ))
@@ -162,6 +98,81 @@ public:
         dy_ = 5.0;
     }
 };
+
+class ScreenSaver
+{
+private:
+    vector< PFigure > figures;
+    int size_;
+    Circle *c;
+public:
+    static ScreenSaver &Instance()
+    {
+        static ScreenSaver instance;
+        return instance;
+    }
+
+    void Draw()
+    {
+        al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
+        al_init_font_addon();
+        al_init_ttf_addon();
+        //const string text  =(char*) p1 + ' : ' +p2;
+        //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
+        for( int i = 0; i < size_; ++i )
+        {
+            figures[i]->Draw();
+        }
+        c->Draw();
+    }
+
+    void Next()
+    {
+        for( int i = 0; i < size_; ++i )
+        {
+           figures[i]->Move();
+        }
+        c->Move();
+    }
+
+    void Add( Figure *f )
+    {
+        if ( size_ >= MAX )
+        {
+            return;
+        }
+        figures.push_back(f);
+        ++size_;
+    }
+
+    void Reset()
+    {
+        for( int i = 0; i < size_; ++i )
+        {
+           figures[i]->Reset();
+        }
+        c->Reset();
+    }
+
+private:
+    ScreenSaver() :
+        size_( 0 )
+    {
+        c = new Circle( 10.0 );
+    }
+
+    ~ScreenSaver()
+    {
+        for( int i = 0; i < size_; ++i )
+        {
+            delete figures[i];
+        }
+    }
+};
+
+void tmpReset() {
+ScreenSaver::Instance().Reset();
+}
 
 class Player1 : public Figure
 {
@@ -262,12 +273,12 @@ public:
         humanSquare_( 30 ),
         humanSquare2_( 30 )
     {
-        ScreenSaver::Instance().Add(
-                    FigureFactory::Create( FigureFactory::RandomCircle ) );
+        /*ScreenSaver::Instance().Add(
+            FigureFactory::Create( FigureFactory::RandomCircle ) );*/
         for( int i = 0; i < 10; ++i )
         {
-                ScreenSaver::Instance().Add(
-                    FigureFactory::Create( FigureFactory::RandomSquare ) );
+            ScreenSaver::Instance().Add(
+                FigureFactory::Create( FigureFactory::RandomSquare ) );
 
         }
     }
