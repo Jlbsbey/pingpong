@@ -25,6 +25,13 @@ public:
     virtual void Reset()=0;
     virtual void Draw() = 0;
     virtual void Move()=0;
+    virtual double getx(){
+        return x_;
+    }
+    virtual double gety(){
+        return y_;
+    }
+    virtual double geta()=0;
 };
 
 
@@ -35,6 +42,15 @@ protected:
     double x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
     double y_=rand()%600 +40;
 public:
+    /*double getx(){
+        return x_;
+    }
+    double gety(){
+        return y_;
+    }*/
+    double geta(){
+        return a_;
+    }
     Square( double a ) :
         Figure(),
         a_( 30 )
@@ -63,6 +79,19 @@ class Circle : public Figure
 protected:
     double r_;
 public:
+    double geta(){}
+    void invertdx(){
+        dx_=-dx_;
+    }
+    void invertdy(){
+        dy_=-dy_;
+    }
+    double getx(){
+        return x_;
+    }
+    double gety(){
+        return y_;
+    }
     Circle( double r ) :
         Figure()
     {
@@ -75,7 +104,7 @@ public:
     {
         x_ += dx_;
         y_ += dy_;
-        if ( ( x_ < 1.0 ))
+        if ( ( x_ < 10.0 ))
         {
             p2++;
             tmpReset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
@@ -83,10 +112,10 @@ public:
             p1++;
             tmpReset();
         }
-        if ( ( y_ < 1.0 ) ||
+        if ( ( y_ < 10.0 ) ||
             ( y_ > SCREEN_H ))
         {
-            dy_= -dy_;
+            invertdy();
         }
     };
     void Reset()
@@ -130,9 +159,17 @@ public:
     {
         for( int i = 0; i < size_; ++i )
         {
+            if(c->getx()+10>(figures[i]->getx() /*and c->gety()+10<figures[i]->gety()+figures[i]->geta() and c->gety()+10>figures[i]->gety()*/)){
+                c->invertdx();
+            }else if(c->gety()-10>(figures[i]->gety()+figures[i]->geta() /*and c->getx()+10<figures[i]->getx()+figures[i]->geta() and c->gety()+10>figures[i]->getx()*/)){
+                c->invertdy();
+            }
            figures[i]->Move();
         }
         c->Move();
+        /*for(int i=0; i<figures.size();i++){
+            
+        }*/
     }
 
     void Add( Figure *f )
@@ -179,6 +216,9 @@ class Player1 : public Figure
 protected:
     double a_=0.3*SCREEN_H;
 public:
+    double geta(){
+        return a_;
+    }
     Player1( double side ) :
         Figure()
     {
@@ -212,6 +252,9 @@ class Player2 : public Figure
 protected:
     double a_=0.3*SCREEN_H;
 public:
+    double geta(){
+        return a_;
+    }
     Player2( double side ) :
         Figure()
     {
