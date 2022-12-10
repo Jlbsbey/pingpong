@@ -147,14 +147,13 @@ public:
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        al_init_font_addon();
-        al_init_ttf_addon();
+        /*al_init_font_addon();
+        al_init_ttf_addon();*/
         //const string text  =(char*) p1 + ' : ' +p2;
         //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
 
         for( int i = 0; i < size_; ++i )
         {
-            cout << figures[i]->gety() ;
             figures[i]->Draw();
         }
         c->Draw();
@@ -164,22 +163,14 @@ public:
     {
         for( int i = 0; i < figures.size() ; ++i )
         {
-            cout << " ////// " << c->gety() << endl;;
-            //cout << figures[i]->getx() <<endl;
-            cout << (c->gety()+10 >= figures[i]->gety()) ;
-            cout << (c->gety()+10 < figures[i]->gety() + figures[i]->geta());
-            cout << (c->getx() >= figures[i]->getx());
-            cout << (c->getx() <= figures[i]->getx() + figures[i]->geta()) << endl;
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
                 || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
                 c->invertdx();
-                cout << "x" << endl;
             }
 
             if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
-                cout << "y" << endl;
             }
            figures[i]->Move();
         }
