@@ -39,25 +39,28 @@ class Square : public Figure
 {
 protected:
     double a_;
-    double x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
-    double y_=rand()%600 +40;
+    double x_;
+    double y_;
 public:
-    /*double getx(){
+    double getx(){
         return x_;
     }
     double gety(){
         return y_;
-    }*/
+    }
     double geta(){
         return a_;
     }
     Square( double a ) :
         Figure(),
         a_( 30 )
-    {}
+    {
+        x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
+        y_=rand()%600 +40;
+    }
     virtual void Draw()
     {
-        al_draw_filled_rectangle( x_, y_ , x_+a_, y_-a_, al_map_rgb( 255, 255, 255 ) );
+        al_draw_filled_rectangle( x_, y_ , x_+a_, y_+a_, al_map_rgb( 255, 255, 255 ) );
     }
     virtual void Move()
     {
@@ -71,7 +74,7 @@ public:
 };
 
 typedef Figure * PFigure;
-const int MAX = 6;
+const int MAX =6;
 void tmpReset();
 
 class Circle : public Figure
@@ -108,12 +111,12 @@ public:
         {
             p2++;
             tmpReset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
-        }else if(( x_ > SCREEN_W )){
+        }else if(( x_+10.0 > SCREEN_W )){
             p1++;
             tmpReset();
         }
         if ( ( y_ < 10.0 ) ||
-            ( y_ > SCREEN_H ))
+            ( y_+10.0 > SCREEN_H ))
         {
             invertdy();
         }
@@ -123,7 +126,7 @@ public:
         x_ = SCREEN_W/2;
         y_ = SCREEN_H/2;
         dx_ = (rand() % 10) - 5;
-        if( dx_ == 0){ dx_ = 1; }
+        if( dx_ == 0){ dx_ = 5.0; }
         dy_ = 5.0;
     }
 };
@@ -148,8 +151,10 @@ public:
         al_init_ttf_addon();
         //const string text  =(char*) p1 + ' : ' +p2;
         //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
+
         for( int i = 0; i < size_; ++i )
         {
+            cout << figures[i]->gety() ;
             figures[i]->Draw();
         }
         c->Draw();
@@ -157,19 +162,28 @@ public:
 
     void Next()
     {
-        for( int i = 0; i < size_; ++i )
+        for( int i = 0; i < figures.size() ; ++i )
         {
-            if(c->getx()+10>(figures[i]->getx() /*and c->gety()+10<figures[i]->gety()+figures[i]->geta() and c->gety()+10>figures[i]->gety()*/)){
+            cout << " ////// " << c->gety() << endl;;
+            //cout << figures[i]->getx() <<endl;
+            cout << (c->gety()+10 >= figures[i]->gety()) ;
+            cout << (c->gety()+10 < figures[i]->gety() + figures[i]->geta());
+            cout << (c->getx() >= figures[i]->getx());
+            cout << (c->getx() <= figures[i]->getx() + figures[i]->geta()) << endl;
+            if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
+                || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
                 c->invertdx();
-            }else if(c->gety()-10>(figures[i]->gety()+figures[i]->geta() /*and c->getx()+10<figures[i]->getx()+figures[i]->geta() and c->gety()+10>figures[i]->getx()*/)){
+                cout << "x" << endl;
+            }
+
+            if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
+                || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
+                cout << "y" << endl;
             }
            figures[i]->Move();
         }
         c->Move();
-        /*for(int i=0; i<figures.size();i++){
-            
-        }*/
     }
 
     void Add( Figure *f )

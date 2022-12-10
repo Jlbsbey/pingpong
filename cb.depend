@@ -1236,7 +1236,7 @@
 	<allegro5/allegro_font.h>
 	<allegro5/allegro_ttf.h>
 
-1669461833 source:c:\personal_bs\pingpong\main.cpp
+1670671680 source:c:\personal_bs\pingpong\main.cpp
 	<iostream>
 	"AllegroBase.hpp"
 	<windows.h>
