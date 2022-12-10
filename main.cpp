@@ -131,101 +131,6 @@ public:
     }
 };
 
-class ScreenSaver
-{
-private:
-    vector< PFigure > figures;
-    int size_;
-    Circle *c;
-    //Player1 *p1;
-    //Player2 *p2;
-public:
-    static ScreenSaver &Instance()
-    {
-        static ScreenSaver instance;
-        return instance;
-    }
-
-    void Draw()
-    {
-        al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        /*al_init_font_addon();
-        al_init_ttf_addon();*/
-        //const string text  =(char*) p1 + ' : ' +p2;
-        //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
-
-        for( int i = 0; i < size_; ++i )
-        {
-            figures[i]->Draw();
-        }
-        c->Draw();
-    }
-
-    void Next()
-    {
-        for( int i = 0; i < figures.size() ; ++i )
-        {
-            if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
-                || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
-                c->invertdx(); //правая и левая сторона квадрата
-            }
-
-            if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
-                || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
-                c->invertdy(); //верхняя и нижняя сторона квадрата
-            }
-
-            /*if(c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety()+8 >= p1->gety() && c->gety()-8 <= p1->gety()+p1->geta()){
-                c->invertdx();
-            }*/ //проверка на столкновение с платформой
-
-            }
-           figures[i]->Move();
-        }
-        c->Move();
-    }
-
-    void Add( Figure *f )
-    {
-        if ( size_ >= MAX )
-        {
-            return;
-        }
-        figures.push_back(f);
-        ++size_;
-    }
-
-    void Reset()
-    {
-        for( int i = 0; i < size_; ++i )
-        {
-           figures[i]->Reset();
-        }
-        c->Reset();
-    }
-
-private:
-    ScreenSaver() :
-        size_( 0 )
-    {
-        c = new Circle( 10.0 );
-        //p1 = new Player1( 40.0 );
-        //p2 = new Player2( 40.0 );
-    }
-
-    ~ScreenSaver()
-    {
-        for( int i = 0; i < size_; ++i )
-        {
-            delete figures[i];
-        }
-    }
-};
-
-void tmpReset() {
-ScreenSaver::Instance().Reset();
-}
-
 class Player1 : public Figure
 {
 protected:
@@ -299,6 +204,102 @@ public:
         y_ = SCREEN_H/2;
     }
 };
+
+class ScreenSaver
+{
+private:
+    vector< PFigure > figures;
+    int size_;
+    Circle *c;
+    Player1 *p1;
+    Player2 *p2;
+public:
+    static ScreenSaver &Instance()
+    {
+        static ScreenSaver instance;
+        return instance;
+    }
+
+    void Draw()
+    {
+        al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
+        /*al_init_font_addon();
+        al_init_ttf_addon();*/
+        //const string text  =(char*) p1 + ' : ' +p2;
+        //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
+
+        for( int i = 0; i < size_; ++i )
+        {
+            figures[i]->Draw();
+        }
+        c->Draw();
+    }
+
+    void Next()
+    {
+        for( int i = 0; i < figures.size() ; ++i )
+        {
+
+            if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
+                || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
+                c->invertdx();
+            }
+
+            if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
+                || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
+                c->invertdy();
+            }
+            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety()+8 >= p1->gety() && c->gety()-8 <= p1->gety()+p1->geta())
+                || (c->getx()+10 >= p2->getx() && c->gety()+8 >= p2->gety() && c->gety()-8 <= p2->gety()+p2->geta())){
+                c->invertdx();
+            }
+           figures[i]->Move();
+        }
+        c->Move();
+    }
+
+    void Add( Figure *f )
+    {
+        if ( size_ >= MAX )
+        {
+            return;
+        }
+        figures.push_back(f);
+        ++size_;
+    }
+
+    void Reset()
+    {
+        for( int i = 0; i < size_; ++i )
+        {
+           figures[i]->Reset();
+        }
+        c->Reset();
+    }
+
+private:
+    ScreenSaver() :
+        size_( 0 )
+    {
+        c = new Circle( 10.0 );
+        //p1 = new Player1( 40.0 );
+        //p2 = new Player2( 40.0 );
+    }
+
+    ~ScreenSaver()
+    {
+        for( int i = 0; i < size_; ++i )
+        {
+            delete figures[i];
+        }
+    }
+};
+
+void tmpReset() {
+ScreenSaver::Instance().Reset();
+}
+
+
 
 class FigureFactory
 {
