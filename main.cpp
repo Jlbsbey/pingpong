@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
-//вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до
+//вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до; радиус не спавна около центра экрана
 using namespace std;
 
 const int FPS = 60;
@@ -137,6 +137,8 @@ private:
     vector< PFigure > figures;
     int size_;
     Circle *c;
+    //Player1 *p1;
+    //Player2 *p2;
 public:
     static ScreenSaver &Instance()
     {
@@ -165,12 +167,18 @@ public:
         {
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
                 || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
-                c->invertdx();
+                c->invertdx(); //правая и левая сторона квадрата
             }
 
             if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
-                c->invertdy();
+                c->invertdy(); //верхняя и нижняя сторона квадрата
+            }
+
+            /*if(c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety()+8 >= p1->gety() && c->gety()-8 <= p1->gety()+p1->geta()){
+                c->invertdx();
+            }*/ //проверка на столкновение с платформой
+
             }
            figures[i]->Move();
         }
@@ -201,6 +209,8 @@ private:
         size_( 0 )
     {
         c = new Circle( 10.0 );
+        //p1 = new Player1( 40.0 );
+        //p2 = new Player2( 40.0 );
     }
 
     ~ScreenSaver()
@@ -283,6 +293,7 @@ public:
         } else{
             y_+=dy_;
         }
+        
     };
     virtual void Reset(){
         y_ = SCREEN_H/2;
@@ -316,6 +327,7 @@ private:
     Player1 humanSquare_;
     Player2 humanSquare2_;
 public:
+
     AllegroApp() :
         AllegroBase(),
         humanSquare_( 30 ),
