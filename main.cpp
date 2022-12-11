@@ -7,7 +7,7 @@
 //вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до; радиус не спавна около центра экрана
 using namespace std;
 
-const int FPS = 60;
+const int FPS = 10;
 const int SCREEN_W = 1280;
 const int SCREEN_H = 720;
 int p1=0, p2=0;
@@ -135,16 +135,25 @@ class Player1 : public Figure
 {
 protected:
     double a_=0.3*SCREEN_H;
+    double x_;
+    double y_;
 public:
+    double half = a_/2;
     double geta(){
         return a_;
+    }
+    double getx(){
+        return x_;
+    }
+    double gety(){
+        return y_;
     }
     Player1( double side ) :
         Figure()
     {
+        x_=SCREEN_W*0.1;
         y_=SCREEN_H/2;
     }
-    double half = a_/2;
     void MoveBy(double dy )
     {
         dy_ = dy;
@@ -152,10 +161,10 @@ public:
     }
     virtual void Draw()
     {
-        al_draw_filled_rectangle( SCREEN_W*0.1,  y_-half, SCREEN_W*0.11, y_+half, al_map_rgb( 255, 255, 255 ) );
+        al_draw_filled_rectangle( SCREEN_W*0.1,  y_, SCREEN_W*0.11, y_+a_, al_map_rgb( 255, 255, 255 ) );
     }
     void Move(){
-        if(y_+half >=SCREEN_H && dy_ >0 || y_-half <= 1 && dy_ <0){
+        if(y_+a_ >=SCREEN_H && dy_ >0 || y_ <= 1 && dy_ <0){
             dy_ = 0;
             y_+=dy_;
         } else{
@@ -171,14 +180,22 @@ class Player2 : public Figure
 {
 protected:
     double a_=0.3*SCREEN_H;
+    double x_;
+    double y_;
 public:
     double geta(){
         return a_;
     }
+    double getx(){
+        return x_;
+    }
+    double gety(){
+        return y_;
+    }
     Player2( double side ) :
         Figure()
     {
-        y_=SCREEN_H/2;
+        x_=SCREEN_W*0.89;
     }
     double half = a_/2;
     void MoveBy(double dy2 )
@@ -192,7 +209,7 @@ public:
             SCREEN_W*0.9, y_-half, al_map_rgb( 255, 255, 255 ) );
     }
     void Move(){
-        if(y_+half >=SCREEN_H && dy_ >0 || y_-half <= 1 && dy_ <0){
+        if(y_+a_ >=SCREEN_H && dy_ >0 || y_ <= 1 && dy_ <0){
             dy_ = 0;
             y_+=dy_;
         } else{
@@ -237,9 +254,14 @@ public:
 
     void Next()
     {
+
+        
         for( int i = 0; i < figures.size() ; ++i )
         {
-
+            /*cout << (c->getx()-10 <= p1->getx()+0.01*SCREEN_W) ;
+            cout << (c->gety() >= p1->gety());
+            cout << (c->gety() <= p1->gety()+p1->geta()) << endl;*/
+            cout << p1->gety() << endl;
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
                 || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
                 c->invertdx();
@@ -249,8 +271,8 @@ public:
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
             }
-            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety()+8 >= p1->gety() && c->gety()-8 <= p1->gety()+p1->geta())
-                || (c->getx()+10 >= p2->getx() && c->gety()+8 >= p2->gety() && c->gety()-8 <= p2->gety()+p2->geta())){
+            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
+                || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety() && c->gety() <= p2->gety()+(p2->geta()/2))){
                 c->invertdx();
             }
            figures[i]->Move();
@@ -282,8 +304,8 @@ private:
         size_( 0 )
     {
         c = new Circle( 10.0 );
-        //p1 = new Player1( 40.0 );
-        //p2 = new Player2( 40.0 );
+        p1 = new Player1(0.3*SCREEN_H);
+        p2 = new Player2( 0.3*SCREEN_H );
     }
 
     ~ScreenSaver()
@@ -324,18 +346,15 @@ public:
 
 class AllegroApp : public AllegroBase
 {
-private:
-    Player1 humanSquare_;
-    Player2 humanSquare2_;
+private:  
 public:
-
+    Player1 humansquare;
+    Player2 humansquare2;
     AllegroApp() :
         AllegroBase(),
-        humanSquare_( 30 ),
-        humanSquare2_( 30 )
+        humansquare(0.3*SCREEN_H),
+        humansquare2(0.3*SCREEN_H)
     {
-        /*ScreenSaver::Instance().Add(
-            FigureFactory::Create( FigureFactory::RandomCircle ) );*/
         for( int i = 0; i < 10; ++i )
         {
             ScreenSaver::Instance().Add(
@@ -347,7 +366,6 @@ public:
     virtual void Fps()
     {
         ScreenSaver::Instance().Next();
-
         double dy = 0, dy2=0;
         if ( IsPressed( ALLEGRO_KEY_UP ) )
         {
@@ -363,15 +381,12 @@ public:
         if(IsPressed(ALLEGRO_KEY_S )){
             dy = +5;
         }
-        humanSquare_.MoveBy(dy);
-        humanSquare2_.MoveBy(dy2);
     }
-
     virtual void Draw()
     {
         ScreenSaver::Instance().Draw();
-        humanSquare_.Draw();
-        humanSquare2_.Draw();
+        humansquare.Draw();
+        humansquare2.Draw();
     }
 
     virtual void OnKeyDown( const ALLEGRO_KEYBOARD_EVENT &keyboard )
@@ -379,8 +394,8 @@ public:
         if ( keyboard.keycode == ALLEGRO_KEY_SPACE )
         {
             ScreenSaver::Instance().Reset();
-            humanSquare_.Reset();
-            humanSquare2_.Reset();
+            humansquare.Reset();
+            humansquare2.Reset();
         }
         else if ( keyboard.keycode == ALLEGRO_KEY_ESCAPE )
         {
