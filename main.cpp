@@ -240,8 +240,8 @@ public:
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        /*al_init_font_addon();
-        al_init_ttf_addon();*/
+        al_init_font_addon();
+        al_init_ttf_addon();
         //const string text  =(char*) p1 + ' : ' +p2;
         //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
 
