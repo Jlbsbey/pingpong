@@ -6,7 +6,6 @@
 #include <vector>
 //вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до; радиус не спавна около центра экрана
 using namespace std;
-
 const int FPS = 10;
 const int SCREEN_W = 1280;
 const int SCREEN_H = 720;
@@ -18,7 +17,6 @@ protected:
     double y_;
     double dx_;
     double dy_;
-
 public:
     Figure(){}
     virtual ~Figure(){};
@@ -33,8 +31,6 @@ public:
     }
     virtual double geta()=0;
 };
-
-
 class Square : public Figure
 {
 protected:
@@ -72,11 +68,9 @@ public:
         y_=rand()%600 +40;
     };
 };
-
 typedef Figure * PFigure;
 const int MAX =6;
 void tmpReset();
-
 class Circle : public Figure
 {
 protected:
@@ -130,7 +124,6 @@ public:
         dy_ = 5.0;
     }
 };
-
 class Player1 : public Figure
 {
 protected:
@@ -157,7 +150,6 @@ public:
     void MoveBy(double dy )
     {
         dy_ = dy;
-        Move();
     }
     virtual void Draw()
     {
@@ -175,7 +167,6 @@ public:
         y_ = SCREEN_H/2;
     };
 };
-
 class Player2 : public Figure
 {
 protected:
@@ -215,13 +206,12 @@ public:
         } else{
             y_+=dy_;
         }
-
+        
     };
     virtual void Reset(){
         y_ = SCREEN_H/2;
     }
 };
-
 class ScreenSaver
 {
 private:
@@ -236,50 +226,42 @@ public:
         static ScreenSaver instance;
         return instance;
     }
-
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        //al_init_font_addon();
-        //al_init_ttf_addon();
+        /*al_init_font_addon();
+        al_init_ttf_addon();*/
         //const string text  =(char*) p1 + ' : ' +p2;
         //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
-
         for( int i = 0; i < size_; ++i )
         {
             figures[i]->Draw();
         }
         c->Draw();
     }
-
     void Next()
     {
-
-
+        
         for( int i = 0; i < figures.size() ; ++i )
         {
-            /*cout << (c->getx()-10 <= p1->getx()+0.01*SCREEN_W) ;
-            cout << (c->gety() >= p1->gety());
-            cout << (c->gety() <= p1->gety()+p1->geta()) << endl;*/
+
             cout << p1->gety() << endl;
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
                 || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
                 c->invertdx();
             }
-
             if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
             }
-            /*if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
+            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
                 || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety() && c->gety() <= p2->gety()+(p2->geta()/2))){
                 c->invertdx();
-            }*/
+            }
            figures[i]->Move();
         }
         c->Move();
     }
-
     void Add( Figure *f )
     {
         if ( size_ >= MAX )
@@ -289,7 +271,6 @@ public:
         figures.push_back(f);
         ++size_;
     }
-
     void Reset()
     {
         for( int i = 0; i < size_; ++i )
@@ -298,16 +279,14 @@ public:
         }
         c->Reset();
     }
-
 private:
     ScreenSaver() :
         size_( 0 )
     {
         c = new Circle( 10.0 );
-        /*p1 = new Player1(0.3*SCREEN_H);
-        p2 = new Player2( 0.3*SCREEN_H );*/
+        p1 = new Player1(0.3*SCREEN_H);
+        p2 = new Player2( 0.3*SCREEN_H );
     }
-
     ~ScreenSaver()
     {
         for( int i = 0; i < size_; ++i )
@@ -316,13 +295,9 @@ private:
         }
     }
 };
-
 void tmpReset() {
 ScreenSaver::Instance().Reset();
 }
-
-
-
 class FigureFactory
 {
 public:
@@ -331,7 +306,6 @@ public:
         RandomCircle,
         RandomSquare
     };
-
     static Figure * Create( Type type )
     {
         switch( type )
@@ -343,10 +317,9 @@ public:
         }
     }
 };
-
 class AllegroApp : public AllegroBase
 {
-private:
+private:  
 public:
     Player1 humansquare;
     Player2 humansquare2;
@@ -359,10 +332,8 @@ public:
         {
             ScreenSaver::Instance().Add(
                 FigureFactory::Create( FigureFactory::RandomSquare ) );
-
         }
     }
-
     virtual void Fps()
     {
         ScreenSaver::Instance().Next();
@@ -381,8 +352,6 @@ public:
         if(IsPressed(ALLEGRO_KEY_S )){
             dy = +5;
         }
-        humansquare.MoveBy(dy);
-        humansquare2.MoveBy(dy2);
     }
     virtual void Draw()
     {
@@ -390,7 +359,6 @@ public:
         humansquare.Draw();
         humansquare2.Draw();
     }
-
     virtual void OnKeyDown( const ALLEGRO_KEYBOARD_EVENT &keyboard )
     {
         if ( keyboard.keycode == ALLEGRO_KEY_SPACE )
@@ -406,19 +374,15 @@ public:
         }
     }
 };
-
-
 int main(int argc, char **argv)
 {
     srand( time(0) );
-
     AllegroApp app;
     if ( !app.Init( SCREEN_W, SCREEN_H, FPS ) )
     {
         return 1;
     }
     app.Run();
-
     // cin.get();
     return 0;
 }
