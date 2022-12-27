@@ -79,6 +79,7 @@ public:
     double geta(){}
     void invertdx(){
         dx_=-dx_;
+        cout<<"got"<<endl;
     }
     void invertdy(){
         dy_=-dy_;
@@ -131,7 +132,6 @@ protected:
     double x_;
     double y_;
 public:
-    double half = a_/2;
     double geta(){
         return a_;
     }
@@ -145,27 +145,30 @@ public:
         Figure()
     {
         x_=SCREEN_W*0.1;
-        y_=SCREEN_H/2;
     }
-    void MoveBy(double dy )
+    double half = a_/2;
+    void MoveBy(double dy1 )
     {
-        dy_ = dy;
+        dy_ = dy1;
+        Move();
     }
     virtual void Draw()
     {
-        al_draw_filled_rectangle( SCREEN_W*0.1,  y_, SCREEN_W*0.11, y_+a_, al_map_rgb( 255, 255, 255 ) );
+        al_draw_filled_rectangle( SCREEN_W*0.1,  y_+half,
+            SCREEN_W*0.11, y_-half, al_map_rgb( 255, 255, 255 ) );
     }
     void Move(){
-        if(y_+a_ >=SCREEN_H && dy_ >0 || y_ <= 1 && dy_ <0){
+        if(y_+a_/2 >=SCREEN_H && dy_ >0 || y_- a_ /2 <= 1 && dy_ <0){
             dy_ = 0;
             y_+=dy_;
         } else{
             y_+=dy_;
         }
+        
     };
-    void Reset(){
+    virtual void Reset(){
         y_ = SCREEN_H/2;
-    };
+    }
 };
 class Player2 : public Figure
 {
@@ -200,7 +203,7 @@ public:
             SCREEN_W*0.9, y_-half, al_map_rgb( 255, 255, 255 ) );
     }
     void Move(){
-        if(y_+a_ >=SCREEN_H && dy_ >0 || y_ <= 1 && dy_ <0){
+        if(y_+a_/2 >=SCREEN_H && dy_ >0 || y_- a_ /2 <= 1 && dy_ <0){
             dy_ = 0;
             y_+=dy_;
         } else{
@@ -237,15 +240,28 @@ public:
         {
             figures[i]->Draw();
         }
+        p1->Draw();
+        p2->Draw();
         c->Draw();
     }
     void Next()
     {
+        if(GetKeyState(VK_UP) & 0x8000){
+            p2->MoveBy(-5);
+        } 
+        if(GetKeyState(VK_DOWN) & 0x8000){
+            p2->MoveBy(5);
+        }
+        if(GetKeyState('W') & 0x8000){
+            p1->MoveBy(-5);
+        }
+        if(GetKeyState('S') & 0x8000){
+            p1->MoveBy(5);
+        }
         
         for( int i = 0; i < figures.size() ; ++i )
         {
 
-            cout << p1->gety() << endl;
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
                 || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
                 c->invertdx();
@@ -254,8 +270,8 @@ public:
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
             }
-            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
-                || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety() && c->gety() <= p2->gety()+(p2->geta()/2))){
+            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety()-(p1->geta()/2) && c->gety() <= p1->gety()+(p1->geta()/2))
+                || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety()-(p2->geta()/2) && c->gety() <= p2->gety()+(p2->geta()/2))){
                 c->invertdx();
             }
            figures[i]->Move(); 
@@ -278,6 +294,8 @@ public:
            figures[i]->Reset();
         }
         c->Reset();
+        p1->Reset();
+        p2->Reset();
     }
 private:
     ScreenSaver() :
@@ -321,12 +339,12 @@ class AllegroApp : public AllegroBase
 {
 private:  
 public:
-    Player1 humansquare;
-    Player2 humansquare2;
+    //Player1 humansquare;
+    //Player2 humansquare2;
     AllegroApp() :
-        AllegroBase(),
-        humansquare(0.3*SCREEN_H),
-        humansquare2(0.3*SCREEN_H)
+        AllegroBase()
+        /*humansquare(0.3*SCREEN_H),
+        humansquare2(0.3*SCREEN_H)*/
     {
         for( int i = 0; i < 10; ++i )
         {
@@ -337,7 +355,7 @@ public:
     virtual void Fps()
     {
         ScreenSaver::Instance().Next();
-        double dy = 0, dy2=0;
+        /*double dy = 0, dy2=0;
         if ( IsPressed( ALLEGRO_KEY_UP ) )
         {
             dy2 = -5;
@@ -351,21 +369,19 @@ public:
         }
         if(IsPressed(ALLEGRO_KEY_S )){
             dy = +5;
-        }
+        }*/
     }
     virtual void Draw()
     {
         ScreenSaver::Instance().Draw();
-        humansquare.Draw();
-        humansquare2.Draw();
     }
     virtual void OnKeyDown( const ALLEGRO_KEYBOARD_EVENT &keyboard )
     {
         if ( keyboard.keycode == ALLEGRO_KEY_SPACE )
         {
             ScreenSaver::Instance().Reset();
-            humansquare.Reset();
-            humansquare2.Reset();
+            /*humansquare.Reset();
+            humansquare2.Reset();*/
         }
         else if ( keyboard.keycode == ALLEGRO_KEY_ESCAPE )
         {
