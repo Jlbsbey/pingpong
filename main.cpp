@@ -215,7 +215,7 @@ public:
         } else{
             y_+=dy_;
         }
-        
+
     };
     virtual void Reset(){
         y_ = SCREEN_H/2;
@@ -240,8 +240,8 @@ public:
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        al_init_font_addon();
-        al_init_ttf_addon();
+        //al_init_font_addon();
+        //al_init_ttf_addon();
         //const string text  =(char*) p1 + ' : ' +p2;
         //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
 
@@ -255,7 +255,7 @@ public:
     void Next()
     {
 
-        
+
         for( int i = 0; i < figures.size() ; ++i )
         {
             /*cout << (c->getx()-10 <= p1->getx()+0.01*SCREEN_W) ;
@@ -271,10 +271,10 @@ public:
                 || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
                 c->invertdy();
             }
-            if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
+            /*if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety() && c->gety() <= p1->gety()+p1->geta())
                 || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety() && c->gety() <= p2->gety()+(p2->geta()/2))){
                 c->invertdx();
-            }
+            }*/
            figures[i]->Move();
         }
         c->Move();
@@ -304,8 +304,8 @@ private:
         size_( 0 )
     {
         c = new Circle( 10.0 );
-        p1 = new Player1(0.3*SCREEN_H);
-        p2 = new Player2( 0.3*SCREEN_H );
+        /*p1 = new Player1(0.3*SCREEN_H);
+        p2 = new Player2( 0.3*SCREEN_H );*/
     }
 
     ~ScreenSaver()
@@ -346,7 +346,7 @@ public:
 
 class AllegroApp : public AllegroBase
 {
-private:  
+private:
 public:
     Player1 humansquare;
     Player2 humansquare2;
@@ -381,6 +381,8 @@ public:
         if(IsPressed(ALLEGRO_KEY_S )){
             dy = +5;
         }
+        humansquare.MoveBy(dy);
+        humansquare2.MoveBy(dy2);
     }
     virtual void Draw()
     {
