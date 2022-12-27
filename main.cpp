@@ -258,7 +258,7 @@ public:
                 || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety() && c->gety() <= p2->gety()+(p2->geta()/2))){
                 c->invertdx();
             }
-           figures[i]->Move();
+           figures[i]->Move(); 
         }
         c->Move();
     }
