@@ -258,7 +258,7 @@ public:
         if(GetKeyState('S') & 0x8000){
             p1->MoveBy(5);
         }
-        for( int i = 0; i < figures.size() ; ++i )
+        for( int i = 0; i < figures.size() ; ++i ) 
         {
 
             if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
