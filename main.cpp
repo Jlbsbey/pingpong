@@ -258,7 +258,6 @@ public:
         if(GetKeyState('S') & 0x8000){
             p1->MoveBy(5);
         }
-        
         for( int i = 0; i < figures.size() ; ++i )
         {
 

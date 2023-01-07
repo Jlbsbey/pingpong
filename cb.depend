@@ -1230,11 +1230,10 @@
 	"AllegroBase.hpp"
 	<iostream>
 
-1668254465 c:\personal_bs\pingpong\allegrobase.hpp
+1673087675 c:\personal_bs\pingpong\allegrobase.hpp
 	<allegro5/allegro.h>
 	<allegro5/allegro_primitives.h>
 	<allegro5/allegro_font.h>
-	<allegro5/allegro_ttf.h>
 
 1670671680 source:c:\personal_bs\pingpong\main.cpp
 	<iostream>
