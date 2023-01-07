@@ -4,12 +4,11 @@
 #include <cstdlib>
 #include <cstdio>
 #include <vector>
-//вывод счета; ресет линий, которые отбивают мяч, если они не состоят в массиве из фигур(?); пауза после отрисоки а не до; радиус не спавна около центра экрана
+//пауза после отрисоки а не до; радиус не спавна около центра экрана
 using namespace std;
 const int FPS = 60;
-const int SCREEN_W = 1280;
-const int SCREEN_H = 720;
-int p1=0, p2=0, ct=0;
+const int SCREEN_H = 1080;
+const int SCREEN_W = SCREEN_H/9*16;
 class Figure
 {
 protected:
@@ -49,10 +48,15 @@ public:
     }
     Square( double a ) :
         Figure(),
-        a_( 30 )
+        a_( 0.05*SCREEN_H )
     {
-        x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
-        y_=rand()%600 +40;
+        int lim1=0.6*SCREEN_W;
+        x_=SCREEN_W*0.2+(rand()%lim1);
+        y_=rand()%int(SCREEN_H);
+        while(0.40*SCREEN_W<x_ && x_<0.55*SCREEN_W && 0.40*SCREEN_H<y_ && y_<0.55*SCREEN_H){
+            x_=SCREEN_W*0.2+(rand()%lim1-a_);
+            y_=rand()%int(SCREEN_H- a_);
+        }
     }
     virtual void Draw()
     {
@@ -64,12 +68,18 @@ public:
         dy_=0;
     };
     virtual void Reset(){
-        x_=SCREEN_W/2+(rand()%768) - SCREEN_W*0.3;
-        y_=rand()%600 +40;
+        int lim1=0.6*SCREEN_W;
+        x_=SCREEN_W*0.2+(rand()%lim1);
+        y_=rand()%int(SCREEN_H-a_);
+        while(0.45*SCREEN_W<x_ && x_<0.55*SCREEN_W && 0.45*SCREEN_H<y_ && y_<0.55*SCREEN_H){
+            x_=SCREEN_W*0.2+(rand()%lim1);
+            y_=rand()%int(SCREEN_H-a_);
+        }
     };
 };
 typedef Figure * PFigure;
-const int MAX =6;
+const int MAX =0;
+int po1=0, po2=0;
 void tmpReset();
 class Circle : public Figure
 {
@@ -89,17 +99,39 @@ public:
     double gety(){
         return y_;
     }
-    void addspd(double f){
-        if (dx_<0){
-            dx_-=f;
-        }else{
-            dx_+=f;
-        }
-        cout << dx_ << endl;
+    double getdx(){
+        return dx_;
+    }
+    double getdy(){
+        return dy_;
     }
     Circle( double r ) :
         Figure()
     {
+        x_ = SCREEN_W/2;
+        y_ = SCREEN_H/2;
+        int rnd= rand()%4;
+        switch (rnd)
+        {
+        case 0:
+            dx_ = 9;
+            dy_ = 5;
+            break;
+        case 1:
+            dx_ = -9;
+            dy_ = 5;
+            break;
+        case 2:
+            dx_ = 9;
+            dy_ = -5;
+            break;
+        case 3:
+            dx_ = -9;
+            dy_ = -5;
+            break;
+        default:
+            break;
+        }
     }
     virtual void Draw()
     {
@@ -109,14 +141,16 @@ public:
     {
         x_ += dx_;
         y_ += dy_;
-        if ( ( x_ < 10.0 ))
+        if ( ( x_ < 10.0))
         {
-            p2++;
-            ct=0;
+            po2++;
+            system("cls");
+            cout << po1 << ":" << po2 << endl;
             tmpReset(); //ресет всех фигур, что есть в массиве из фигур через сс.ресет
         }else if(( x_+10.0 > SCREEN_W )){
-            p1++;
-            ct=0;
+            po1++;
+            system("cls");
+            cout << po1 << ":" << po2 << endl;
             tmpReset();
         }
         if ( ( y_ < 10.0 ) ||
@@ -129,9 +163,28 @@ public:
     {
         x_ = SCREEN_W/2;
         y_ = SCREEN_H/2;
-        dx_ = (rand() % 20) - 10;
-        if( dx_ == 0){ dx_ = 5.0; }
-        dy_ = 5.0;
+        int rnd= rand()%4;
+        switch (rnd)
+        {
+        case 0:
+            dx_ = 9;
+            dy_ = 5;
+            break;
+        case 1:
+            dx_ = -9;
+            dy_ = 5;
+            break;
+        case 2:
+            dx_ = 9;
+            dy_ = -5;
+            break;
+        case 3:
+            dx_ = -9;
+            dy_ = -5;
+            break;
+        default:
+            break;
+        }
     }
 };
 class Player1 : public Figure
@@ -148,12 +201,14 @@ public:
         return x_;
     }
     double gety(){
-        return y_;
+        double y=y_-half;
+        return y;
     }
     Player1( double side ) :
         Figure()
     {
         x_=SCREEN_W*0.1;
+        y_ = SCREEN_H/2;
     }
     double half = a_/2;
     void MoveBy(double dy1 )
@@ -193,12 +248,14 @@ public:
         return x_;
     }
     double gety(){
-        return y_;
+        double y=y_-half;
+        return y;
     }
     Player2( double side ) :
         Figure()
     {
         x_=SCREEN_W*0.89;
+        y_ = SCREEN_H/2;
     }
     double half = a_/2;
     void MoveBy(double dy2 )
@@ -241,10 +298,6 @@ public:
     void Draw()
     {
         al_clear_to_color( al_map_rgb( 0, 0, 0 ) );
-        /*al_init_font_addon();
-        al_init_ttf_addon();*/
-        //const string text  =(char*) p1 + ' : ' +p2;
-        //al_draw_text( al_load_font( "arial.ttf", 50, 0 ), al_map_rgb( 255, 255, 255 ), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTRE, "123" );
         for( int i = 0; i < size_; ++i )
         {
             figures[i]->Draw();
@@ -269,21 +322,27 @@ public:
         }
         for( int i = 0; i < figures.size() ; ++i )
         {
-
-            if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() )
-                || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety())){
+            if((c->getx()+10 >= figures[i]->getx() && c->getx()+10 < figures[i]->getx() + figures[i]->geta() && c->getx()-10 < figures[i]->getx() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() && c->getdx()>0 )
+                || (c->getx()-10 <= figures[i]->getx()+figures[i]->geta() && c->getx()-10 > figures[i]->getx() && c->getx()+10> figures[i]->getx()+figures[i]->geta() && c->gety() <= figures[i]->gety() + figures[i]->geta() && c->gety() >= figures[i]->gety() && c->getdx()<0)){
                 c->invertdx();
             }
-            if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())
-                || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta())){
+            if((c->gety()+10 >= figures[i]->gety() && c->gety()+10 < figures[i]->gety() + figures[i]->geta() && c->gety()-10 < figures[i]->gety() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta() && c->getdy()>0)
+                || (c->gety()-10 <= figures[i]->gety() + figures[i]->geta() && c->gety()-10 > figures[i]->gety() && c->gety()+10 > figures[i]->gety()+ figures[i]->geta() && c->getx() >= figures[i]->getx() && c->getx() <= figures[i]->getx() + figures[i]->geta() && c->getdy()<0)){
                 c->invertdy();
             }
            figures[i]->Move();
         }
-        if((c->getx()-10 <= p1->getx()+0.01*SCREEN_W && c->gety() >= p1->gety()-(p1->geta()/2) && c->gety() <= p1->gety()+(p1->geta()/2) && c->getx()+10 >= p1->getx())
-                || (c->getx()+10 >= p2->getx() && c->gety() >= p2->gety()-(p2->geta()/2) && c->gety() <= p2->gety()+(p2->geta()/2)) && c->getx()-10 <= p2->getx()+0.01*SCREEN_W){
-                c->addspd(0.5);
+        if((c->getx()+10 >= p2->getx() && c->getx()+10 < p2->getx() + SCREEN_W*0.01 && c->getx()-10 < p2->getx() && c->gety() <= p2->gety() + p2->geta() && c->gety() >= p2->gety() && c->getdx()>0 )
+            || (c->getx()-10 <= p1->getx() +SCREEN_W*0.01 && c->getx()-10 > p1->getx() && c->getx()+10 > p1->getx()+SCREEN_W*0.01 && c->gety() <= p1->gety() + p1->geta() && c->gety() >= p1->gety() && c->getdx()<0)){
                 c->invertdx();
+            }
+        if((c->gety()+10 >= p1->gety() && c->gety()+10 < p1->gety() + p1->geta() && c->gety()-10 < p1->gety() && c->getx() >= p1->getx() && c->getx() <= p1->getx() + SCREEN_W*0.01 && c->getdy()>0)
+            || (c->gety()-10 <= p1->gety() + p1->geta() && c->gety()-10 > p1->gety() && c->gety()+10 > p1->gety()+ SCREEN_W*0.01 && c->getx() >= p1->getx() && c->getx() <= p1->getx() + SCREEN_W*0.01 && c->getdy()<0)){
+                c->invertdy();
+            }
+        if((c->gety()+10 >= p2->gety() && c->gety()+10 < p2->gety() + p2->geta() && c->gety()-10 < p2->gety() && c->getx() >= p2->getx() && c->getx() <= p2->getx() + SCREEN_W*0.01 && c->getdy()>0)
+            || (c->gety()-10 <= p2->gety() + p2->geta() && c->gety()-10 > p2->gety() && c->gety()+10 > p2->gety()+ SCREEN_W*0.01 && c->getx() >= p2->getx() && c->getx() <= p2->getx() + SCREEN_W*0.01 && c->getdy()<0)){
+                c->invertdy();
             }
         c->Move();
     }
@@ -369,7 +428,8 @@ public:
     {
         if ( keyboard.keycode == ALLEGRO_KEY_SPACE )
         {
-            ct=0;
+            po1=0;
+            po2=0;
             ScreenSaver::Instance().Reset();
         }
         else if ( keyboard.keycode == ALLEGRO_KEY_ESCAPE )
@@ -379,9 +439,20 @@ public:
         }
     }
 };
+void AltEnter()
+{
+    keybd_event(VK_MENU, 0x38, 0, 0);
+    keybd_event(VK_RETURN, 0x1c, 0, 0);
+    keybd_event(VK_RETURN, 0x1c, KEYEVENTF_KEYUP, 0);
+    keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0);
+    return;
+}
 int main(int argc, char **argv)
 {
+    AltEnter();
     srand( time(0) );
+    system("cls");
+    cout << po1 << ":" << po2 << endl;
     AllegroApp app;
     if ( !app.Init( SCREEN_W, SCREEN_H, FPS ) )
     {
