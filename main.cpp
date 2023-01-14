@@ -7,7 +7,7 @@
 //пауза после отрисоки а не до; радиус не спавна около центра экрана
 using namespace std;
 const int FPS = 60;
-const int SCREEN_H = 1080;
+const int SCREEN_H = 1040;
 const int SCREEN_W = SCREEN_H/9*16;
 class Figure
 {
@@ -78,7 +78,7 @@ public:
     };
 };
 typedef Figure * PFigure;
-const int MAX =0;
+const int MAX =10;
 int po1=0, po2=0;
 void tmpReset();
 class Circle : public Figure
