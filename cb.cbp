@@ -16,8 +16,8 @@
 					<Add directory="../../../mingw64/x86_64-w64-mingw32/include" />
 				</Compiler>
 				<Linker>
-					<Add library="../../Program Files/CodeBlocks20/MinGW/lib/liballegro.dll.a" />
-					<Add library="../../Program Files/CodeBlocks20/MinGW/lib/liballegro_primitives.dll.a" />
+					<Add library="C:/CodeBlocks20/MinGW/lib/liballegro.dll.a" />
+					<Add library="C:/CodeBlocks20/MinGW/lib/liballegro_primitives.dll.a" />
 				</Linker>
 			</Target>
 			<Target title="Release">
